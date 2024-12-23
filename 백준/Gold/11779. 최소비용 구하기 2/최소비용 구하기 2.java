@@ -1,40 +1,47 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
+    static int N, start, end;
+    static List<List<Node>> graph;
+    static int[] dist, prev;
+
     static class Node implements Comparable<Node> {
-        int to, cost;
-        Node(int to, int cost) {
-            this.to = to;
+        int node;
+        int cost;
+
+        public Node(int node, int cost) {
+            this.node = node;
             this.cost = cost;
         }
+
         @Override
         public int compareTo(Node o) {
             return this.cost - o.cost;
         }
     }
 
-    static int N, M, start, end;
-    static List<List<Node>> graph;
-    static int[] dist, prev;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
         N = Integer.parseInt(br.readLine());
-        M = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
 
         graph = new ArrayList<>();
         for (int i = 0; i <= N; i++) {
             graph.add(new ArrayList<>());
         }
 
-        StringTokenizer st;
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
+
+            int n1 = Integer.parseInt(st.nextToken());
+            int n2 = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
-            graph.get(from).add(new Node(to, cost));
+
+            graph.get(n1).add(new Node(n2, cost));
         }
 
         st = new StringTokenizer(br.readLine());
@@ -42,7 +49,7 @@ public class Main {
         end = Integer.parseInt(st.nextToken());
 
         dijkstra();
-
+        
         System.out.println(dist[end]);
 
         List<Integer> path = new ArrayList<>();
@@ -68,16 +75,19 @@ public class Main {
         pq.offer(new Node(start, 0));
 
         while (!pq.isEmpty()) {
-            Node current = pq.poll();
-            if (current.cost > dist[current.to]) continue;
+            Node curNode = pq.poll();
 
-            for (Node next : graph.get(current.to)) {
-                if (dist[next.to] > dist[current.to] + next.cost) {
-                    dist[next.to] = dist[current.to] + next.cost;
-                    prev[next.to] = current.to;
-                    pq.offer(new Node(next.to, dist[next.to]));
+            if (curNode.cost > dist[curNode.node]) continue;
+
+            for (Node next : graph.get(curNode.node)) {
+                int newCost = curNode.cost + next.cost;
+                if (newCost < dist[next.node]) {
+                    dist[next.node] = newCost;
+                    prev[next.node] = curNode.node;
+                    pq.offer(new Node(next.node, newCost));
                 }
             }
         }
+
     }
 }
