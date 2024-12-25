@@ -11,7 +11,7 @@ public class Main {
 		int N = Integer.parseInt(br.readLine());
 		int[] L = new int[N+1];
 		int[] J = new int[N+1];
-		int[][] dp = new int[N+1][health+1];
+		int[] dp = new int[health+1];
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		for(int i=1; i<=N; i++) {
@@ -24,16 +24,11 @@ public class Main {
 		}
 		
 		for(int i=1; i<=N; i++) {
-			for(int j=1; j<=health; j++) {
-				if(L[i]>=j) {
-					dp[i][j] = dp[i-1][j];
-				}
-				else {
-					dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-L[i]]+J[i]);
-				}
+			for(int j=100; j-L[i]>0; j--) {
+				dp[j] = Math.max(dp[j], dp[j-L[i]]+J[i]);
 			}
 		}
 		
-		System.out.println(dp[N][100]);
+		System.out.println(dp[100]);
 	}
 }
