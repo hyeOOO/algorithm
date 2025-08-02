@@ -1,14 +1,14 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.Buffer;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Main{
     static int N, M;
     static char[][] map;
-    static int[][] visited; // 0: 미방문, 1: 방문중, 2: 완료
-    static boolean[][] safezone;
-    static int safeZoneCount = 0;
+    static int[][] visited;
+    static int safezoneCount = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,54 +18,49 @@ public class Main {
 
         map = new char[N][M];
         visited = new int[N][M];
-        safezone = new boolean[N][M];
 
-        for(int i = 0; i < N; i++){
-            String line = br.readLine();
-            for(int j = 0; j < M; j++){
-                map[i][j] = line.charAt(j);
+        for(int i=0; i<N; i++){
+            char[] cArr = br.readLine().toCharArray();
+            for(int j=0; j<M; j++){
+                map[i][j] = cArr[j];
             }
         }
 
-        for(int i = 0; i < N; i++){
-            for(int j = 0; j < M; j++){
-                if(visited[i][j] == 0){
+        for(int i=0; i<N; i++){
+            for(int j=0; j<M; j++){
+                if(visited[i][j]==0){
                     dfs(i, j);
                 }
             }
         }
 
-        System.out.println(safeZoneCount);
+        System.out.println(safezoneCount);
     }
 
     public static void dfs(int y, int x){
-        if(visited[y][x] == 1){ // 사이클 발견
-            safeZoneCount++;
+        if(visited[y][x]==1){
+            safezoneCount++;
             return;
-        }
-        
-        if(visited[y][x] == 2){ // 이미 처리된 경로
+        }else if(visited[y][x]==2){
             return;
         }
 
-        visited[y][x] = 1; // 방문 중으로 마킹
+        visited[y][x] = 1;
 
-        // 다음 위치 계산
         int ny = y, nx = x;
-        char direction = map[y][x];
-        
-        switch(direction){
-            case 'U': ny = y - 1; break;
-            case 'D': ny = y + 1; break;
-            case 'L': nx = x - 1; break;
-            case 'R': nx = x + 1; break;
+        char d = map[y][x];
+
+        switch(d){
+            case 'U':ny = y-1; break;
+            case 'D':ny = y+1; break;
+            case 'L':nx = x-1; break;
+            case 'R':nx = x+1; break;
         }
 
-        // 배열 경계 검사 (문제 조건상 항상 유효한 범위일 것이라 가정)
-        if(ny >= 0 && ny < N && nx >= 0 && nx < M){
+        if(ny>=0&&nx>=0&&ny<N&&nx<M){
             dfs(ny, nx);
         }
 
-        visited[y][x] = 2; // 완료로 마킹
+        visited[y][x] = 2;
     }
 }
