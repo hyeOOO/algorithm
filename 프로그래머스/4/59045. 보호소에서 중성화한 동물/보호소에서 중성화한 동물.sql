@@ -1,0 +1,9 @@
+-- 코드를 입력하세요
+SELECT I.ANIMAL_ID
+        , I.ANIMAL_TYPE
+        , I.NAME
+FROM ANIMAL_INS I JOIN ANIMAL_OUTS O
+    ON I.ANIMAL_ID = O.ANIMAL_ID
+WHERE I.SEX_UPON_INTAKE IN ('Intact Female', 'Intact Male')
+    AND SEX_UPON_OUTCOME IN ('Spayed Female', 'Neutered Male')
+ORDER BY I.ANIMAL_ID;
