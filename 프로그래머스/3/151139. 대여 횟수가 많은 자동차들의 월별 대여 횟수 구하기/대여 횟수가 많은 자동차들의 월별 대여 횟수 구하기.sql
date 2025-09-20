@@ -1,0 +1,23 @@
+SELECT MONTH
+      ,CAR_ID
+      ,RECORDS 
+FROM
+(
+    SELECT MONTH
+          ,CAR_ID
+          ,COUNT(CAR_ID) OVER (PARTITION BY MONTH, CAR_ID) AS RECORDS
+          ,COUNT(CAR_ID) OVER (PARTITION BY CAR_ID) AS ALL_RECORDS
+    FROM
+    (
+        SELECT HISTORY_ID
+              ,MONTH(START_DATE) AS 'MONTH'
+              ,CAR_ID
+              ,START_DATE
+        FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+        WHERE START_DATE >= '2022-08-01'
+        AND START_DATE < '2022-11-01'
+    ) AS inner_query  -- 여기에 alias 추가
+) AS outer_query      -- 여기에 alias 추가
+WHERE ALL_RECORDS >= 5
+GROUP BY MONTH, CAR_ID, RECORDS
+ORDER BY MONTH, CAR_ID DESC;
