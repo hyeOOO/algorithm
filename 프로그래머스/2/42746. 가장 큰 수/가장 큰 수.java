@@ -21,7 +21,7 @@ class Solution {
         StringBuilder sb = new StringBuilder();
         
         if(!isZero){
-            for(int i=0; i<nums.length; i++){
+            for(int i = 0; i < nums.length; i++){
                 sb.append(nums[i]);
             }
         }else{
